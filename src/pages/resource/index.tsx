@@ -5,11 +5,16 @@ import {
   ScrollView,
   Image,
   Pressable,
+  Switch,
 } from 'react-native';
 
 import moreIcon from '../../assets/icon/more.png';
+import { useState } from 'react';
 
 export default function Resource() {
+  const [isEnabled, setIsEnabled] = useState(false);
+  const toggleSwitch = () => setIsEnabled(previousState => !previousState);
+
   const handlePressSetting = () => {
     console.log('打开设置页面');
   };
@@ -52,8 +57,42 @@ export default function Resource() {
 
         <View style={{ display: 'flex', gap: 14 }}>
           <View style={styles.card}>
-            <View style={styles.cardHeader}>
+            <View style={[styles.cardHeader, { marginBottom: 10 }]}>
               <Text style={styles.cardTitle}>远程访问</Text>
+              <Switch
+                trackColor={{ false: '#767577', true: '#4589FF' }}
+                thumbColor="white"
+                ios_backgroundColor="#3e3e3e"
+                onValueChange={toggleSwitch}
+                value={isEnabled}
+              />
+            </View>
+            <View style={styles.cardContent}></View>
+            <View style={styles.cardFooter}>
+              <View style={styles.cardFooterItem}>
+                <Text>安全状态</Text>
+                <Text
+                  style={{
+                    color: 'white',
+                    lineHeight: 20,
+                    fontWeight: 500,
+                    backgroundColor: '#1890FF',
+                    borderRadius: 4,
+                    boxSizing: 'border-box',
+                    paddingHorizontal: 8,
+                  }}
+                >
+                  安全
+                </Text>
+              </View>
+              <View style={styles.cardFooterItem}>
+                <Text>网络传输</Text>
+                <Text>50MB/s</Text>
+              </View>
+              <View style={styles.cardFooterItem}>
+                <Text>运行时常</Text>
+                <Text>30 分钟</Text>
+              </View>
             </View>
           </View>
           <View style={styles.card}>
@@ -155,5 +194,25 @@ const styles = StyleSheet.create({
     color: '#282731',
     lineHeight: 16,
     fontWeight: 500,
+  },
+  cardContent: {
+    height: 43,
+    backgroundColor:
+      'linear-gradient(180.00deg, rgba(173, 183, 249, 1),rgba(177, 185, 248, 0) 100%)',
+    opacity: 0.4,
+    marginBottom: 14,
+  },
+  cardFooter: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  cardFooterItem: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 4,
   },
 });
