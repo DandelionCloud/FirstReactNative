@@ -1,9 +1,8 @@
-import { FlatList, Image, StyleSheet, Text, View } from 'react-native';
+import React, { useRef, useState } from 'react';
+import { Image, StyleSheet, Text, View, Animated } from 'react-native';
 import StyledCard from './styled-card';
 
 import defaultApp from '../../../assets/img/app.png';
-import React from 'react';
-import { useState } from 'react';
 
 const mock = [
   { title: '名称1', code: '1', image: defaultApp },
@@ -20,11 +19,22 @@ const mock = [
 
 const ITEM_GAP = 12;
 const VISIBLE_COUNT = 4;
+const TRACK_WIDTH = 25;
+const THUMB_WIDTH = 15;
 
 export default function RecentlyUsed() {
   const [data, setData] = useState(mock);
-
   const [availableWidth, setAvailableWidth] = useState(0);
+
+  const scrollX = useRef(new Animated.Value(0)).current;
+  const [containerWidth, setContainerWidth] = useState(0);
+  const [contentWidth, setContentWidth] = useState(1);
+
+  const translateX = scrollX.interpolate({
+    inputRange: [0, Math.max(1, contentWidth - containerWidth)],
+    outputRange: [0, Math.max(0, TRACK_WIDTH - THUMB_WIDTH)],
+    extrapolate: 'clamp',
+  });
 
   const itemWidth =
     availableWidth > 0
@@ -46,14 +56,29 @@ export default function RecentlyUsed() {
           setAvailableWidth(width);
         }}
       >
-        <FlatList
+        <Animated.FlatList
           horizontal={true}
           data={data}
           keyExtractor={item => item.code}
-          showsHorizontalScrollIndicator={true}
+          showsHorizontalScrollIndicator={false}
+          onLayout={e => setContainerWidth(e.nativeEvent.layout.width)}
+          onContentSizeChange={w => setContentWidth(w)}
+          onScroll={Animated.event(
+            [{ nativeEvent: { contentOffset: { x: scrollX } } }],
+            { useNativeDriver: false },
+          )}
+          scrollEventThrottle={16}
           ItemSeparatorComponent={() => <View style={{ width: ITEM_GAP }} />}
           renderItem={renderItem}
         />
+        {/* 极简位置提示器 */}
+        {contentWidth > containerWidth && (
+          <View style={styles.track}>
+            <Animated.View
+              style={[styles.thumb, { transform: [{ translateX }] }]}
+            />
+          </View>
+        )}
       </View>
     </StyledCard>
   );
@@ -76,5 +101,20 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     lineHeight: 20,
     color: '#282731',
+  },
+  track: {
+    width: 25,
+    height: 4,
+    alignSelf: 'center',
+    backgroundColor: '#E4E4E7',
+    borderRadius: 2,
+    marginTop: 8,
+    overflow: 'hidden',
+  },
+  thumb: {
+    width: THUMB_WIDTH,
+    height: 4,
+    borderRadius: 2,
+    backgroundColor: '#88878E',
   },
 });
