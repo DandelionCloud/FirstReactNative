@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { FlatList, StyleSheet, Text, View } from 'react-native';
 import StyledCard from './styled-card';
 import { Image } from '@rneui/base';
 
@@ -37,29 +37,76 @@ const mock = [
   { title: '名称29', code: '29', image: defaultApp },
   { title: '名称30', code: '30', image: defaultApp },
 ];
+const ITEM_GAP = 12;
+const VISIBLE_COUNT = 4;
+
 export default function ResourceGroup() {
   const [list, setList] = useState(mock);
+  const [availableWidth, setAvailableWidth] = useState(0);
+
+  const itemWidth =
+    availableWidth > 0
+      ? (availableWidth - ITEM_GAP * (VISIBLE_COUNT - 1)) / VISIBLE_COUNT
+      : 0;
+  console.log('🌈 itemWidth', itemWidth);
+
+  const renderItem = ({ item }: { item: (typeof mock)[0][] }) => (
+    <View style={styles.groupList}>
+      {item.map(item => (
+        <View style={[styles.item, { width: itemWidth }]} key={item.code}>
+          <Image source={item.image} style={styles.itemImage} />
+          <Text style={styles.itemTitle}>{item.title}</Text>
+        </View>
+      ))}
+    </View>
+  );
+
+  function splitByFour(arr: (typeof mock)[0][]) {
+    const result = [];
+    for (let i = 0; i < arr.length; i += 4) {
+      result.push(arr.slice(i, i + 4));
+    }
+    return result;
+  }
+
   return (
     <StyledCard title="资源组">
-      <View style={styles.groupList}>
-        {list.map(item => (
-          <View style={styles.item} key={item.code}>
+      <View
+        style={styles.groupList}
+        onLayout={e => {
+          const width = e.nativeEvent.layout.width;
+          console.log('🦀 width', width);
+          setAvailableWidth(width);
+        }}
+      >
+        {/* {list.map(item => (
+          <View style={[styles.item, { width: itemWidth }]} key={item.code}>
             <Image source={item.image} style={styles.itemImage} />
             <Text style={styles.itemTitle}>{item.title}</Text>
           </View>
-        ))}
+        ))} */}
+
+        <FlatList
+          data={splitByFour(list)}
+          keyExtractor={item => item[0].code}
+          scrollEnabled={false}
+          removeClippedSubviews={false}
+          showsHorizontalScrollIndicator={true}
+          ItemSeparatorComponent={() => <View style={{ height: ITEM_GAP }} />}
+          renderItem={renderItem}
+        />
       </View>
     </StyledCard>
   );
 }
 const styles = StyleSheet.create({
   groupList: {
+    width: '100%',
     flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 12,
+    justifyContent: 'flex-start',
+    gap: ITEM_GAP,
   },
   item: {
-    width: 70,
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
