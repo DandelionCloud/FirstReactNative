@@ -1,28 +1,11 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
-
-import { NewAppScreen } from '@react-native/new-app-screen';
-import {
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-} from 'react-native';
-import {
-  SafeAreaProvider,
-  useSafeAreaInsets,
-} from 'react-native-safe-area-context';
+import { StatusBar, useColorScheme, View } from 'react-native';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { NavigationContainer } from '@react-navigation/native';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
-import routes from './src/routes';
+import stackRoutes, { drawerRoutes } from './src/routes';
 import SettingDrawer from './src/pages/setting';
 import Resource from './src/pages/resource';
 
@@ -43,17 +26,11 @@ function App() {
 }
 
 function AppContent() {
-  const safeAreaInsets = useSafeAreaInsets();
-
   return (
-    <View style={styles.container}>
-      {/*<NewAppScreen
-        templateFileName="App.tsx"
-        safeAreaInsets={safeAreaInsets}
-      />*/}
+    <View style={{ flex: 1 }}>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="SettingDrawer">
-          {routes.map(route => (
+        <Stack.Navigator initialRouteName="Home">
+          {stackRoutes.map(route => (
             <Stack.Screen
               key={route.name}
               name={route.name}
@@ -84,39 +61,20 @@ function DrawerView() {
           borderTopRightRadius: 20,
           borderBottomRightRadius: 20,
         },
-        headerShown: false, // 将标题栏隐藏
+        headerShown: false,
       }}
     >
-      <Drawer.Screen
-        name="Resource"
-        component={() => {
-          return <Resource />;
-        }}
-      />
-      <Drawer.Screen
-        name="AppearanceSetting"
-        component={() => {
-          return (
-            <View
-              style={{
-                flex: 1,
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}
-            >
-              <Text>外观设置</Text>
-            </View>
-          );
-        }}
-      />
+      <Drawer.Screen name="Resource" component={Resource} />
+      {drawerRoutes.map(route => (
+        <Drawer.Screen
+          key={route.name}
+          name={route.name}
+          component={route.component}
+          options={{ title: route.title }}
+        />
+      ))}
     </Drawer.Navigator>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});
 
 export default App;

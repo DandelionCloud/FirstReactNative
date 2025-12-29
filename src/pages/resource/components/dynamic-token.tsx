@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Image, StyleSheet, Text, View } from 'react-native';
 import StyledCard from './styled-card';
 
-import PressIcon from '../../../components/presss-icon';
+import PressableWithOpacity from '../../../components/presss-opacity';
 import eyeIcon from '../../../assets/icon/eye.png';
 
 export default function DynamicToken() {
@@ -37,12 +37,12 @@ export default function DynamicToken() {
               : groupBy3(maskToken(token))}
           </Text>
         </View>
-        <PressIcon
+        <PressableWithOpacity
           accessibilityLabel="查看令牌"
           onPress={() => setVisible(!visible)}
         >
           <Image source={eyeIcon} style={styles.eyeIcon} />
-        </PressIcon>
+        </PressableWithOpacity>
       </View>
     </StyledCard>
   );

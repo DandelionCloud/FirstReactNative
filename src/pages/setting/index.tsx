@@ -1,20 +1,31 @@
 import { Image, StyleSheet, View, Text } from 'react-native';
-import { DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
+import {
+  DrawerContentComponentProps,
+  DrawerContentScrollView,
+  DrawerItem,
+} from '@react-navigation/drawer';
 import { Button } from '@rneui/themed';
 
-import PressIcon from '../../components/presss-icon';
+import PressableWithOpacity from '../../components/presss-opacity';
+import { StackNavigationProp } from '../../routes/define';
+
 import ScaneImg from '../../assets/img/scan-line.png';
 import ShieldIcon from '../../assets/icon/shield-check.png';
 import PhoneIcon from '../../assets/icon/tablet-smartphone.png';
 import SettingIcon from '../../assets/icon/settings.png';
 
-export default function Setting() {
+export default function Setting(props: DrawerContentComponentProps) {
+  const { navigation } = props;
+
   const handleLogout = () => {
-    console.log('logout');
+    // 获取父级 stack 导航器
+    const parent = navigation.getParent() as StackNavigationProp;
+    parent.replace('Login');
   };
+
   return (
     <View style={styles.container}>
-      <DrawerContentScrollView style={styles.drawerContent}>
+      <DrawerContentScrollView style={styles.drawerContent} {...props}>
         <View style={styles.header}>
           <View style={styles.leftInfo}>
             <View style={styles.avatar}>
@@ -26,9 +37,9 @@ export default function Setting() {
             </View>
           </View>
           <View style={styles.rightScane}>
-            <PressIcon style={{ width: 20, height: 20 }}>
+            <PressableWithOpacity style={{ width: 20, height: 20 }}>
               <Image source={ScaneImg} />
-            </PressIcon>
+            </PressableWithOpacity>
           </View>
         </View>
         <DrawerItem
@@ -37,6 +48,7 @@ export default function Setting() {
           labelStyle={styles.menuLabel}
           onPress={() => {
             console.log('账号安全');
+            navigation.navigate('AccountSecurity');
           }}
           icon={() => <Image source={ShieldIcon} />}
         />
@@ -57,6 +69,7 @@ export default function Setting() {
           )}
           onPress={() => {
             console.log('登录设备');
+            navigation.navigate('LoggedInDevices');
           }}
         />
         <DrawerItem
@@ -65,7 +78,8 @@ export default function Setting() {
           labelStyle={styles.menuLabel}
           icon={() => <Image source={SettingIcon} />}
           onPress={() => {
-            console.log('登录设备');
+            console.log('通用设置');
+            navigation.navigate('GeneralSetting');
           }}
         />
       </DrawerContentScrollView>

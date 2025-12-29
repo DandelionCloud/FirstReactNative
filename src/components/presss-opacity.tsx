@@ -1,11 +1,13 @@
 import { PropsWithChildren } from 'react';
-import { Pressable, PressableProps } from 'react-native';
+import { Pressable, PressableProps, StyleProp, ViewStyle } from 'react-native';
 
 interface PressIconProps extends PressableProps {
-  containerStyles?: {};
+  containerStyles?: StyleProp<ViewStyle>;
 }
 
-export default function PressIcon(props: PressIconProps & PropsWithChildren) {
+export default function PressableWithOpacity(
+  props: PressIconProps & PropsWithChildren,
+) {
   const { containerStyles, ...pressableProps } = props;
   return (
     <Pressable

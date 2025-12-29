@@ -7,17 +7,23 @@ import {
   Pressable,
   ImageBackground,
 } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { DrawerNavigationProp } from '@react-navigation/drawer';
 
-import moreIcon from '../../assets/icon/more.png';
-import appBg from '../../assets/img/app-bg.png';
+import { DrawerParamList } from '../../routes/define';
 import RemoteAccess from './components/remote-access';
 import DynamicToken from './components/dynamic-token';
 import ResourceGroup from './components/resource-group';
 import RecentlyUsed from './components/recently-used';
 
+import moreIcon from '../../assets/icon/more.png';
+import appBg from '../../assets/img/app-bg.png';
+
 export default function Resource() {
+  const navigation = useNavigation<DrawerNavigationProp<DrawerParamList>>();
+
   const handlePressSetting = () => {
-    console.log('打开设置页面');
+    navigation.openDrawer();
   };
 
   return (

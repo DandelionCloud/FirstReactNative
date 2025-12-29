@@ -1,10 +1,20 @@
-import { ReactNode } from 'react';
+import { ReactNode, useEffect } from 'react';
 import { Image, ImageBackground, StyleSheet, Text, View } from 'react-native';
+
+import { StackScreenProp } from '../routes/define';
 
 import launch from '../assets/img/launch.png';
 import launchBg from '../assets/img/launch-bg.png';
 
-function Home(): ReactNode {
+export default function Home(props: StackScreenProp<'Home'>): ReactNode {
+  const { navigation } = props;
+
+  useEffect(() => {
+    setTimeout(() => {
+      navigation.navigate('Network');
+    }, 2000);
+  }, []);
+
   return (
     <View style={styles.container}>
       <ImageBackground source={launchBg} style={styles.background}>
@@ -27,14 +37,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     position: 'relative',
   },
-  content: {
-    width: '100%',
-    height: 'auto',
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    position: 'relative',
-  },
   image: {
     height: '30%',
     top: '20%',
@@ -43,10 +45,7 @@ const styles = StyleSheet.create({
     fontSize: 28,
     color: '#1890FF',
     lineHeight: 28,
-    // fontFamily: 'BDZYJT--GB1-0',
     position: 'absolute',
     top: '54%',
   },
 });
-
-export default Home;

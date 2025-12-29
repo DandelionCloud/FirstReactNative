@@ -1,13 +1,12 @@
 import { ReactNode } from 'react';
 import { View, Text, StyleSheet, Image } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
 import { Button } from '@rneui/themed';
 
-import { NavigationProp } from '../routes/define';
+import { StackScreenProp } from '../routes/define';
 import loginLogo from '../assets/img/login-bg.png';
 
-export default function LoginPage(): ReactNode {
-  const navigate = useNavigation<NavigationProp>();
+export default function LoginPage(props: StackScreenProp<'Login'>): ReactNode {
+  const { navigation } = props;
   return (
     <View style={styles.container}>
       <View style={{ width: '100%' }}>
@@ -21,7 +20,7 @@ export default function LoginPage(): ReactNode {
       <View style={{ width: '100%' }}>
         <Button
           title="前往浏览器认证"
-          onPress={() => {}}
+          onPress={() => navigation.navigate('SettingDrawer')}
           containerStyle={styles.joinBtnContainer}
           buttonStyle={[styles.joinBtn, { backgroundColor: '#0077f6' }]}
           titleStyle={styles.joinBtnTitle}
@@ -29,7 +28,7 @@ export default function LoginPage(): ReactNode {
         <Button
           title="切换企业网络"
           type="clear"
-          onPress={() => navigate.navigate('NetworkList')}
+          onPress={() => navigation.navigate('NetworkList')}
           titleStyle={[styles.joinBtnTitle, { color: '#595860' }]}
         />
       </View>

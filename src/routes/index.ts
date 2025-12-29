@@ -1,16 +1,22 @@
+import { DrawerRouteName, StackRouteName } from './define';
 import HomeScreen from '../pages/home';
 import NetworkScreen from '../pages/network';
 import NetworkListScreen from '../pages/network/list';
 import LoginScreen from '../pages/login';
-import ResourceScreen from '../pages/resource';
-import { RouteName } from './define';
+
+import AccountSecurity from '../pages/setting/account';
+import GeneralSetting from '../pages/setting/general';
+import LoggedInDevices from '../pages/setting/devices';
+import AppearanceSetting from '../pages/setting/appearance';
+import LanguageSetting from '../pages/setting/language';
 
 type RouteItem = {
-  name: RouteName;
+  name: StackRouteName | DrawerRouteName;
   component: React.ComponentType<any>;
   title: string;
 };
 
+// stack 路由
 const routes: RouteItem[] = [
   {
     name: 'Home',
@@ -32,10 +38,34 @@ const routes: RouteItem[] = [
     component: LoginScreen,
     title: '登录',
   },
-  {
-    name: 'Resource',
-    component: ResourceScreen,
-    title: '应用资源',
-  },
 ];
 export default routes;
+
+// drawer 路由
+export const drawerRoutes: RouteItem[] = [
+  {
+    name: 'AccountSecurity',
+    component: AccountSecurity,
+    title: '账号安全',
+  },
+  {
+    name: 'LoggedInDevices',
+    component: LoggedInDevices,
+    title: '登录设备',
+  },
+  {
+    name: 'GeneralSetting',
+    component: GeneralSetting,
+    title: '通用设置',
+  },
+  {
+    name: 'AppearanceSetting',
+    component: AppearanceSetting,
+    title: '外观设置',
+  },
+  {
+    name: 'LanguageSetting',
+    component: LanguageSetting,
+    title: '多语言',
+  },
+];

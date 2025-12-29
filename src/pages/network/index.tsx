@@ -1,31 +1,21 @@
 import { ReactNode, useState } from 'react';
-import {
-  Image,
-  Pressable,
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-} from 'react-native';
+import { Alert, Image, StyleSheet, Text, TextInput, View } from 'react-native';
 import { Button } from '@rneui/themed';
-import { useNavigation } from '@react-navigation/native';
+
+import { StackScreenProp } from '../../routes/define';
+import PressableWithOpacity from '../../components/presss-opacity';
 
 import arrowRightLeft from '../../assets/icon/arrow-right-left.png';
-import { NavigationProp } from '../../routes/define';
 
-export default function Network(): ReactNode {
-  const navigate = useNavigation<NavigationProp>();
+export default function Network(props: StackScreenProp<'Network'>): ReactNode {
+  const { navigation } = props;
   const [text, setText] = useState('');
 
-  const handleLinkToList = () => {
-    navigate.navigate('NetworkList');
-  };
-
-  const handlePressJoin = () => {
+  const handleLogin = () => {
     if (!text) {
-      console.log('please enter the code');
+      Alert.alert('提示', '请输入专属邀请码', [{ text: '确认' }]);
     } else {
-      console.log('join network', text);
+      navigation.navigate('Login');
     }
   };
 
@@ -46,32 +36,21 @@ export default function Network(): ReactNode {
             <Text style={styles.inputSuffix}>.angeek.com.cn</Text>
           )}
         </View>
-        <Pressable
-          onPress={handleLinkToList}
-          hitSlop={8}
-          style={({ pressed }) => [
-            styles.switchContainer,
-            { opacity: pressed ? 0.6 : 1 },
-          ]}
-          accessibilityRole="button"
+        <PressableWithOpacity
+          onPress={() => navigation.navigate('NetworkList')}
+          containerStyles={styles.pressContainer}
           accessibilityLabel="Switch Network"
         >
-          <View style={styles.switch}>
-            <Image style={styles.switchIcon} source={arrowRightLeft} />
-            <Text style={styles.switchText}>切换网络</Text>
-          </View>
-        </Pressable>
+          <Image style={styles.pressIcon} source={arrowRightLeft} />
+          <Text style={styles.pressText}>切换网络</Text>
+        </PressableWithOpacity>
       </View>
 
       <Button
-        // disabled={!text}
         title="确认加入"
-        onPress={handlePressJoin}
+        onPress={handleLogin}
         containerStyle={styles.joinBtnContainer}
-        buttonStyle={[
-          styles.joinBtn,
-          { backgroundColor: text ? '#0077f6' : '#88878E' },
-        ]}
+        buttonStyle={styles.joinBtn}
         titleStyle={styles.joinBtnTitle}
       />
     </View>
@@ -134,30 +113,23 @@ const styles = StyleSheet.create({
     color: '#88878E',
     lineHeight: 16,
   },
-  switchContainer: {
+  pressContainer: {
     marginVertical: 20,
-    height: 14,
-  },
-  switch: {
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'flex-start',
-    alignItems: 'flex-start',
-    textAlign: 'left',
+    alignContent: 'center',
     gap: 4,
   },
-  switchIcon: {
+  pressIcon: {
     width: 14,
     height: 14,
     color: '#1890FF',
   },
-  switchText: {
+  pressText: {
     fontSize: 14,
     color: '#1890FF',
     lineHeight: 16,
-  },
-  footer: {
-    width: '100%',
   },
   joinBtnContainer: {
     width: '100%',
